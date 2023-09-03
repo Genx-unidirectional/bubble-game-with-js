@@ -1,8 +1,11 @@
-let btn = document.querySelector("#btn-str");
+let pbtm = document.querySelector("#pbtm");
 let timer = 0;
 let score = 0;
 let hitNum = 0;
 let token = 0;
+let highestScore = 0;
+let effect;
+let btn = document.querySelector("#btn-str");
 function zeroInitial(){
     score = 0;
     hitNum = 0;
@@ -18,19 +21,21 @@ function runTimer(){
         }
         else{
             clearInterval(time);
+            clearInterval(effect);
+            if(score>highestScore){
+                highestScore = score;
+            }
             token = 0;
             zeroInitial();
-            document.querySelector("#pbtm").innerHTML = `<h1>Game Over!</h1>
+            document.querySelector("#pbtm").innerHTML = `<h1>Game Over!</h1></br>
+                                                        <h3>Highest score is ${highestScore}</h3>
                                                         <Button id="btn-str">Click to start</Button>
                                                         `;
-            let btn = document.querySelector("#btn-str");
-            console.log(btn);
-            if(btn){
-                addListenerBtn()
-            }
         }
-    }, 10);
+    }, 1000);
 }
+
+
 function mkBubble(){
     let clutter = "";
     for(let i = 1;i<=100;i++){
@@ -63,33 +68,34 @@ function mkHit(){
 function sdoEff(){
     let bub = document.querySelectorAll(".bubble")
     if(bub){
-        let effect = setInterval(()=>{
+        effect = setInterval(()=>{
             for(let i=0; i<bub.length; i++){
                 bub[i].classList.toggle("sdo");
             }
         },1000);
     }
 }
-function addListenerBtn(){
-    btn.addEventListener("click",()=>{
+
+
+pbtm.addEventListener("click",(e)=>{
+    // console.log(e.target.classList[0]);
+    if(e.target.nodeName==="BUTTON"){
         console.log("Hello");
         token = 1;
         mkHit();
         mkBubble()
         runTimer();
-    })
-}
-addListenerBtn()
-
-let pbtm = document.querySelector("#pbtm");
-pbtm.addEventListener("click",(e)=>{
-    let num = Number(e.target.textContent);
-    console.log(e.target);
-    console.log("Hello");
-    if(hitNum === num){
-        mkScore();
-        mkBubble();
-        mkHit();
+    }
+    else if(e.target.classList[0]==="bubble"){
+        let num = Number(e.target.textContent);
+        // console.log(e);
+        // console.log("Hello");
+        if(hitNum === num){
+            mkScore();
+            mkBubble();
+            mkHit();
+        }
+    
     }
 })
 
